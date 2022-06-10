@@ -31,8 +31,9 @@ class _PriceScreenState extends State<PriceScreen> {
     if (response.statusCode == 200) {
       var jsonData = convert.jsonDecode(response.body);
       setState(() {
-        selectedCurrencyExchangeRate =
-            jsonData['rate'].round().toStringAsFixed(2);
+        int rate = jsonData['rate'].round();
+        var formatedRate = NumberFormat("###,###.##", "en_US").format(rate);
+        selectedCurrencyExchangeRate = formatedRate;
       });
     } else {
       return Future.error("Server Error");
