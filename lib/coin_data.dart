@@ -2,6 +2,7 @@
 //TODO: Add your imports here.
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:intl/intl.dart';
 
 const List<String> currenciesList = [
   'AUD',
@@ -45,7 +46,7 @@ class CoinData {
     if (response.statusCode == 200) {
       var decodedData = convert.jsonDecode(response.body);
       double rate = decodedData['rate'];
-      return rate.toStringAsFixed(0);
+      return NumberFormat("###,###.0#", 'en_US').format(rate);
     } else {
       throw "Server error!";
     }
