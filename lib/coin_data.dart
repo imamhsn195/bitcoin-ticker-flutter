@@ -1,8 +1,5 @@
-// ignore: todo
-//TODO: Add your imports here.
+import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
-import 'package:intl/intl.dart';
 
 const List<String> currenciesList = [
   'AUD',
@@ -35,20 +32,27 @@ const List<String> cryptoList = [
 ];
 
 const coinAPIURL = 'https://rest.coinapi.io/v1/exchangerate';
-const apiKey = '411E3C6E-94C3-4356-A8DB-2F4EEC47A458';
+const apiKey = '4D852E87-6827-4109-B20F-15A6348445A9';
 
 class CoinData {
-  // ignore: todo
-  //TODO: Create your getCoinData() method here.
-  Future<dynamic> getCoinData(selectedCurrency) async {
-    Uri url = Uri.parse('$coinAPIURL/BTC/$selectedCurrency?apiKey=$apiKey');
-    http.Response response = await http.get(url);
-    if (response.statusCode == 200) {
-      var decodedData = convert.jsonDecode(response.body);
-      double rate = decodedData['rate'];
-      return NumberFormat("###,###.0#", 'en_US').format(rate);
-    } else {
-      throw "Server error!";
+  Future getCoinData(String selectedCurrency) async {
+    // ignore: todo
+    //TODO 4: Use a for loop here to loop through the cryptoList and request the data for each of them in turn.
+    // ignore: todo
+    //TODO 5: Return a Map of the results instead of a single value.
+    Map<String, String> criptoPrices = {};
+    for (var crypto in cryptoList) {
+      Uri requestURL =
+          Uri.parse('$coinAPIURL/$crypto/$selectedCurrency/?apiKey=$apiKey');
+      http.Response response = await http.get(requestURL);
+      if (response.statusCode == 200) {
+        var decodedData = jsonDecode(response.body);
+        double lastPrice = decodedData['rate'];
+        criptoPrices[crypto] = lastPrice.toStringAsFixed(0);
+      } else {
+        throw 'Problem with the get request';
+      }
     }
+    return criptoPrices;
   }
 }
